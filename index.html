@@ -1,164 +1,404 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-    <title>이로울 _ Yiroul</title>
     <meta charset="UTF-8">
-    <meta name="description" content="" />
-    <meta name="keywords" content="" />
-    <link rel="stylesheet" type="text/css" href="/css/jquery.fullPage.css">
-    <link rel="stylesheet" type="text/css" href="/css/basic.css">
-    <link rel="stylesheet" type="text/css" href="/css/main.css">
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-	
-    <script type="text/javascript" src="/js/jquery.fullPage.min.js"></script>
+    <meta http-equiv="x-ua-compatible" content="IE=edge, chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="description" content="Yiroul">
+    <meta name="keywords" content="이로울,Yiroul">
+
+    <title>Yiroul</title>
+
+    <link href="./resources/css/aos.css" rel="stylesheet" type="text/css">
+    <link href="./resources/css/base.css" rel="stylesheet" type="text/css">
+    <link href="./resources/css/main.css" rel="stylesheet" type="text/css">
+
+    <script src="./resources/js/jquery-1.11.3.min.js" type="text/javascript"></script>
+    <script src="./resources/js/aos.js" type="text/javascript"></script>
+    <script src="./resources/js/main.js" type="text/javascript"></script>
     <script type="text/javascript">
-		$(document).ready(function() {
-			$('#fullpage').fullpage({
-				sectionsColor: ['#29d9dd', '#f4f4f4', '#22cace', '#f4f4f4', '#1a9fa2'],
-				anchors: ['NoDi_introduction', 'NoDi_effect', 'NoDi_point', 'Yiroul_introduction', 'ContactUs'],
-				menu: '.footer_nav',
-                scrollingSpeed: 1000,
-                navigation: true,
-                navigationPosition: 'right',
-                navigationTooltips: ['NoDi_introduction', 'NoDi_effect', 'NoDi_point', 'Yiroul_introduction', 'ContactUs']
-			});
-		});
-	</script>
+        $(document).ready(function() {
+            AOS.init();
+
+            function scrollChange() {
+                let thisScrollTop = $(document).scrollTop();
+                let bgHeight = $(".home-wrap .bg").outerHeight();
+                let headerHeight = $(".header").height();
+
+                if (thisScrollTop > (bgHeight-headerHeight)) {
+                    $(".header").removeClass("green");
+                    $(".header").addClass("white");
+                } else {
+                    $(".header").removeClass("white");
+                    if (thisScrollTop > headerHeight) {
+                        $(".header").addClass("green");
+                    } else {
+                        $(".header").removeClass("green");
+                    }
+                }
+
+                $(".section").each(function(index, item) {
+                    let scrollTopOffset = thisScrollTop + headerHeight;
+                    let sectionTop = $(item).offset().top;
+                    let sectionBottom = sectionTop + $(item).outerHeight();
+
+                    if (sectionTop <= scrollTopOffset && scrollTopOffset < sectionBottom) {
+                        let linkId = $(item).attr("id");
+                        if (linkId != undefined && linkId != "" && !$(".menu li[data-link='#" + linkId + "']").hasClass("active")) {
+                            $(".menu li.active").removeClass("active");
+                            $(".menu li[data-link='#" + linkId + "']").addClass("active");
+                        }
+                    }
+                });
+            }
+
+            if ($(document).scrollTop() > 0) {
+                scrollChange();
+            }
+
+            $(window).scroll(function() {
+                scrollChange();
+            });
+
+            function menuAction(link) {
+                if (!$(".menu li[data-link='" + link + "']").hasClass("active")) {
+                    $(".menu li.active").removeClass("active");
+                    $(".menu li[data-link='" + link + "']").addClass("active");
+                }
+                let scrollTopOffset = $(link).offset().top;
+                if (scrollTopOffset > 0) {
+                    scrollTopOffset -= $(".header").height();
+                }
+                $("html, body").stop().animate({scrollTop: scrollTopOffset}, 500);
+            }
+
+            $(".logo").on("click", function() {
+                menuAction($(this).attr("data-link"));
+            });
+
+            $(".menu li").on("click", function() {
+                menuAction($(this).attr("data-link"));
+            });
+
+            $(".solution-menu li").on("click", function() {
+                if(!$(this).hasClass("active")) {
+                    $(".solution-menu li.active").removeClass("active");
+                    $(this).addClass("active");
+
+                    $(".solution-desc.active").removeClass("active");
+                    $("#" + $(this).attr("data-link")).addClass("active");
+                }
+            });
+        });
+    </script>
 </head>
 <body>
-    <div class="top_nodi_logo">
-       <img src="/images/yiroul_nodi_top.png" alt="NoDi 로고" />
+    <!-- .header -->
+    <div class="header">
+        <div class="logo" data-link="#home"></div>
+        <div class="gnb">
+            <div class="menu">
+                <ul>
+                    <li class="active" data-link="#home">Home</li>
+                    <li data-link="#solution">Solution</li>
+                    <li data-link="#about_us">About Us</li>
+                    <li data-link="#history">History</li>
+                </ul>
+            </div>
+        </div>
     </div>
-    <div id="fullpage">
-       <div id="section0" class="section nodi_infor">
-           <div class="content">
-               <h2>NoDi 소개</h2>
-               <p>
-                   기존 PC의 하드디스크를 대체하는 <span>가상 하드디스크 시스템</span>으로,<br>
-                   각 PC의 개별 관리 대신 연결된 <span>모든 PC의 중앙집중식 관리</span>가 가능합니다.
-                </p>
-               <div class="nodi_infor_img">
-                   <img src="/images/yiroul_nodi_infor.png" alt="Nodi 소개 이미지" />
-               </div>
-           </div>
-       </div>
-       <div id="section1" class="section nodi_effect">
-           <div class="content">
-               <h2>NoDi 도입 효과</h2>
-               <p>
-                   IT 관리자의 걱정을 덜어줍니다. 관리비는 줄이고 사용자 만족도는 높이고
-                </p>
-               <div class="nodi_infor_img">
-                   <img src="/images/yiroul_nodi_effect.png" alt="Nodi 도입 효과 이미지" />
-               </div>
-           </div>
-       </div>
-       <div id="section2" class="section nodi_point">
-           <div class="content">
-               <h2>특장점</h2>
-               <p>
-                   PC방, 학교, 숙박업소나 관공서를 비롯한 기업에 특화된 솔루션입니다.
-                </p>
-               <div class="nodi_table">
-                   <table>
-                       <caption>특장점</caption>
-                       <tr>
-                           <th><img src="/images/yiroul_nodi_point01.png" />간편한 관리</th>
-                           <td>
-                               각 클라이언트에 동일한 이미지 사용하여 OS, 프로그램, 패치 관리를 모든 클라이언트에 
-                               한 번에 적용  <span>관리 인건비 절약</span><br>
-                               클라이언트 재부팅 시 바이러스나 멀웨어없는 깨끗한 OS 이미지로 자동 복구 <span>보안성 향상</span>
-                           </td>
-                       </tr>
-                       <tr>
-                           <th><img src="/images/yiroul_nodi_point02.png" />부팅 시간 단축</th>
-                           <td>
-                               SSD 드라이브 부팅과 거의 동일한 성능을 가짐
-                           </td>
-                       </tr>
-                       <tr>
-                           <th><img src="/images/yiroul_nodi_point03.png" />HDD 구입 비용 절감</th>
-                           <td>
-                               Client PC에서 가장 고장율이 높은 HDD 불필요, 전력소모 감소
-                           </td>
-                       </tr>
-                       <tr>
-                           <th><img src="/images/yiroul_nodi_point04.png" />ZFS 파일 시스템</th>
-                           <td>
-                               storage fool 전체를 모든 파일 시스템이 디스크 공간을 공유하여 효율적인 Storage 운영이 가능 데이터 손실없이 속도 향상
-                           </td>
-                       </tr>
-                   </table>
-               </div>
-           </div>
-       </div>
-       <div id="section3" class="section yiroul_infor">
-           <div class="content">
-               <h2>
-                   <img src="/images/yiroul_infor_logo.png" alt="Yiroul Logo" />
-               </h2>
-               <p>
-                   IT 기술로 세상을 이롭게 합니다.
-                </p>
-               <div class="yiroul_infor_details">
-                   <span>
-                       홍익인간의 이념으로 거창한 출사표를 내고 실질적으로 <br>
-                        한국 사회의 공익에 일조할 수 있도록 문제를 해결할 수 있는 <br>
-                        솔루션을 만들고자 불철주야 노력하는 업체가 되고자 합니다.<br><br>
-                        수 많은 IT 업체가 있지만 IT 업계에 또 하나의 군소 업체를 추가하는 것에 머무르지 않는 것을 경영이념으로 삼고자 합니다. <br><br>
-                        협력의 생태계가 대세가 되고 점차 글로벌화되는 현재 상황에서, <br>
-                        협력을 통한 시너지 및 공생의 가치를 실현하는 것이 <br>
-                        장기적인 관점에서 IT업계의 일원으로서 기업가치를 실현하는 길이라고 생각합니다.<br><br>
-                        발상의 전환은 무에서 유를 창조하는 것이 아니라 <br>
-                        문제를 발견 및 정의하고 협력을 통해 해결하는 과정에서 혁신이 창조되는 것입니다.<br>
-                        그러한 문제의 하나로 디스크리스 노하드 솔루션을 기획하고 <br>
-                        개발하면서 사업으로 발전하는 계기가 되었습니다.<br>
-                        일상 생활의 불편을 해결하는 과정에서 조금씩 발전되는 것처럼 <br>
-                        인간 중심의 IT 기술 솔루션으로 미래의 "이로울"세상을 꿈꾸어 봅니다.
-                   </span>
-               </div>
-           </div>
-       </div>
-       <div id="section4" class="section contact">
-           <div class="content">
-               <h2>Contact us</h2>
-               <ul class="contact_details">
-                   <li class="tit">주소</li>
-                   <li class="end">서울시 강남구 강남대로 342 역삼빌딩 </li>
-                   <!--li class="end">
-                       <ul class="clear_obj numer_area">
-                           <li class="float_number txt tit">Tel</li>
-                           <li class="float_number number">02. 556. 4801</li>
-                           <li class="float_number txt tit">Fax</li>
-                           <li class="float_number">02. 556. 4801</li>
-                       </ul>
-                   </li>
-                   <li class="product_inquiry tit">제품 문의 전화</li>
-                   <li class="product_inquiry end">a</li-->
-                   <li class="tit">Tel</li>
-                   <li class="end">+82. 70. 7860. 1691</li>
-                   <li class="tit product_inquiry">이메일 주소</li>
-                   <li><a class="product_inquiry" href="mailto:sangwon.jo@yiroul.com">sangwon.jo@yiroul.com</a></li>
-               </ul>
-               <div class="copy">
-                   <img src="/images/yiroul_mini_logo.png" alt="Yiroul Mini Logo"/>
-                   <span>© 2015 Yiroul, All Rights Reserved</span>
-               </div>
-           </div>
-       </div>
+    <!-- /.header -->
+    <!-- .contents -->
+    <div class="contents">
+        <div class="section" id="home">
+            <div class="home-wrap">
+                <div class="bg">
+                    <div class="title"><img src="./resources/img/img_main_text.svg" data-aos="fade-up" data-aos-easing="ease-in-out-cubic" data-aos-duration="1000"></div>
+                </div>
+                <div class="bottom">
+                    <div class="sub-title" data-aos="fade-up" data-aos-easing="ease-in-out-cubic" data-aos-delay="500" data-aos-duration="500">PC, Mobile 등 다양한 환경에서<br>도움을 주는 기술을 만들고 있습니다.</div>
+                    <div class="desc" data-aos="fade-up" data-aos-easing="ease-in-out-cubic" data-aos-delay="500" data-aos-duration="500">
+                        이로울 컴퍼니는 1인 회사로 창립하여, 최신 IT 기술 및 보안 분야의 컨설팅을<br>
+                        주요 분야로 고객의 신뢰, 기술력을 바탕으로 다양한 사업을 기획, 설계, 구현을 추진하고 있습니다.<br>
+                        다양한 환경에서 도움이 되도록 노력하고 있습니다.
+                    </div>
+                    <div class="scroll"></div>
+                </div>
+            </div>
+        </div>
+        <div class="section" id="solution">
+            <div class="solution-wrap" data-aos="fade-in">
+                <div class="title"><img src="./resources/img/img_title_solution.svg"></div>
+                <div class="solution-box">
+                    <div class="solution-menu">
+                        <ul>
+                            <li class="active" data-link="ausms">AUSMS 통합 보안 솔루션</li>
+                            <li data-link="nodi">NoDi (Diskless 노-하드)</li>
+                            <li data-link="db-shields">DB Shields</li>
+                            <li data-link="consulting">Security Consulting</li>
+                            <li data-link="e-learning">Security e-learning</li>
+                        </ul>
+                    </div>
+                    <div id="ausms" class="solution-desc active">
+                        <div class="solution-title-box h213">
+                            <div class="title">AUSMS 통합 보안 솔루션</div>
+                            <div class="desc">
+                                PC의 보안 상태를 체크하고 데이터 및 계정을 통제하는 통합 보안 솔루션입니다.<br>
+                                PC의 프로그램 및 서비스에 대한 접근 권한 통제,<br>
+                                USB 저장 매체 접근 및 해제, PC 취약점 점검 등의 기능을 제공합니다.
+                            </div>
+                        </div>
+                        <div class="solution-detail-box h447">
+                            <div class="ausms access-control">
+                                <div class="title">접근 권한 및 접근 통제</div>
+                                <div class="detail">
+                                    <div class="detail-box">
+                                        <div class="left"><img src="./resources/img/img_ausms_left_1.svg"></div>
+                                        <div class="center">
+                                            <div class="txt">ID & PW 로그인 시도</div>
+                                            <div class="arrow_right"></div>
+                                            <div class="arrow_left"></div>
+                                            <div class="txt">로그인 성공 (권한부여) / 실패</div>
+                                        </div>
+                                        <div class="right"><img src="./resources/img/img_ausms_right.svg"></div>
+                                    </div>
+                                    <div class="detail-box">
+                                        <div class="left"><img src="./resources/img/img_ausms_left_2.svg"></div>
+                                        <div class="center">
+                                            <div class="txt">USB 저장 장치 접근 / 해제</div>
+                                            <div class="arrow_right"></div>
+                                            <div class="arrow_left"></div>
+                                            <div class="txt">OK</div>
+                                        </div>
+                                        <div class="right"><img src="./resources/img/img_ausms_right.svg"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ausms vulnerability">
+                                <div class="title">PC 취약점 점검 및<br>개인정보 탐지</div>
+                                <div class="detail">
+                                    <div class="img-txt-box left">
+                                        <img src="./resources/img/img_ausms_left_3.svg">
+                                        <div class="txt">Windows 정보<br>보안 리스트에 따른<br>점검진행</div>
+                                    </div>
+                                    <div class="img-txt-box right">
+                                        <img src="./resources/img/img_ausms_left_4.svg">
+                                        <div class="txt">PC내 저장된 문서의<br>개인 정보를 찾아<br>정보의 유형 표시</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="nodi" class="solution-desc">
+                        <div class="solution-title-box">
+                            <div class="title">Nodi (Diskless 노-하드)</div>
+                            <div class="desc">
+                                기존 PC의 하드디스크를 대체하는 가상 하드디스크 시스템으로, 연결된 모든 PC를<br>
+                                하드디스크를 중앙에서 관리하는 솔루션입니다.
+                                <div class="sub">
+                                    각 클라이언트 PC의 프로그램 및 패치 일괄 적용, 부팅 시간 단축, HDD 구입비용 및<br>
+                                    효율적인 디스크 공간을 관리할 수 있는 기능을 제공합니다.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="solution-detail-box nodi"></div>
+                    </div>
+                    <div id="db-shields" class="solution-desc">
+                        <div class="solution-title-box h180">
+                            <div class="title">DB Shields</div>
+                            <div class="desc">
+                                민감한 정보 및 중요 정보 보호를 위한 소규모 사업자 전용 데이터 암호화 솔루션입니다.<br>
+                                데이터 암호화, 데이터 백업 및 복구, 암호화 볼륨 사이즈를 유동적으로 조정 및 관리하는 기능을 제공합니다.
+                            </div>
+                        </div>
+                        <div class="solution-detail-box h480">
+                            <div class="db-shields">
+                                <div class="detail-box">
+                                    <div class="img"><img src="./resources/img/img_dbshields_1.svg"></div>
+                                    <div class="title">연락처 보호</div>
+                                    <div class="desc">정형 데이터</div>
+                                </div>
+                                <div class="detail-box">
+                                    <div class="img"><img src="./resources/img/img_dbshields_2.svg"></div>
+                                    <div class="title">이미지 데이터 보호</div>
+                                    <div class="desc">비정형 데이터</div>
+                                </div>
+                                <div class="detail-box">
+                                    <div class="img"><img src="./resources/img/img_dbshields_3.svg"></div>
+                                    <div class="title">영상 데이터 보호</div>
+                                    <div class="desc">비정형 데이터</div>
+                                </div>
+                                <div class="detail-box">
+                                    <div class="img"><img src="./resources/img/img_dbshields_4.svg"></div>
+                                    <div class="title">녹취 데이터 보호</div>
+                                    <div class="desc">비정형 데이터</div>
+                                </div>
+                                <div class="detail-box">
+                                    <div class="img"><img src="./resources/img/img_dbshields_5.svg"></div>
+                                    <div class="title">이메일 보호</div>
+                                    <div class="desc">비정형 데이터</div>
+                                </div>
+                                <div class="detail-box">
+                                    <div class="img"><img src="./resources/img/img_dbshields_6.svg"></div>
+                                    <div class="title">설정 데이터 보호</div>
+                                    <div class="desc">비정형 데이터</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="consulting" class="solution-desc">
+                        <div class="solution-title-box">
+                            <div class="title">Security Consulting</div>
+                            <div class="desc">
+                                다년간 개발 노하우를 바탕으로 보안 인프라 구축 및 실무적인 관점에서 컨설팅 업무를 수행합니다.<br>
+                                시스템의 특성을 적절히 반영한 최적의 제품 및 솔루션을 제안하며,<br>
+                                취약점 점검 및 모의 해킹을 통해 발견된 위험 요소들에 대한 대응 방안을 제공합니다.
+                            </div>
+                        </div>
+                        <div class="solution-detail-box">
+                            <div class="img-box white consulting-1">보안 인프라 설계</div>
+                            <div class="img-box white consulting-2">시스템의 취약점 점검</div>
+                            <div class="img-box white consulting-3">모의해킹</div>
+                        </div>
+                    </div>
+                    <div id="e-learning" class="solution-desc">
+                        <div class="solution-title-box">
+                            <div class="title">Security e-learning</div>
+                            <div class="desc">
+                                IT 교육, 제품 설치, 관리 등 전문적 기술 교육 및 보안 일반 교육을 효과적으로 제공할 수 있는 솔루션입니다.<br>
+                                고객의 수요에 따른 맞춤형 교육 컨텐츠를 제작하여 온라인으로 교육 과정을 제공하고<br>
+                                직원 보안 교육 훈련 시 유용하게 사용할 수 있도록 합니다.
+                            </div>
+                        </div>
+                        <div class="solution-detail-box">
+                            <div class="img-box e-learning-1">강의식 교육</div>
+                            <div class="img-box e-learning-2">e-러닝 교육</div>
+                            <div class="img-box white e-learning-3">맞춤형 실무교육</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section" id="about_us">
+            <div class="about-us-bg">
+                <div class="about-us-wrap" data-aos="fade-in">
+                    <div class="title"><img src="./resources/img/img_title_aboutus.svg"></div>
+                    <div class="about-us-box">
+                        <div class="title"><img src="./resources/img/img_aboutus_text.svg"></div>
+                        <div class="desc">
+                            최신 IT 기술 및 보안 분야의 컨설팅 및 다양한 사업을 기획, 설계 구현을 추진합니다.<br>
+                            다양한 환경에서 도움이 되도록 노력하고 있습니다.
+                        </div>
+                        <div class="company-info">
+                            <div class="info-box">
+                                <img src="./resources/img/icon_aboutus_establish.svg">
+                                <div class="title">설립</div>
+                                <div class="txt">2015년 8월 3일</div>
+                            </div>
+                            <div class="info-box">
+                                <img src="./resources/img/icon_aboutus_ceo.svg">
+                                <div class="title">대표</div>
+                                <div class="txt">조성원</div>
+                            </div>
+                            <div class="info-box">
+                                <img src="./resources/img/icon_aboutus_sectors.svg">
+                                <div class="title">업종 구분</div>
+                                <div class="txt">소프트웨어 개발</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="business-part">
+                        <div class="business-box solution">
+                            <div class="txt">IT & 보안솔루션</div>
+                        </div>
+                        <div class="business-box consulting">
+                            <div class="txt">보안 컨설팅</div>
+                        </div>
+                        <div class="business-box e-learning">
+                            <div class="txt">IT 온라인 교육</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section" id="history">
+            <div class="history-wrap" data-aos="fade-in">
+                <div class="title"><img src="./resources/img/img_title_history.svg"></div>
+                <div class="desc">이로울의 연혁입니다.</div>
+                <div class="history-box">
+                    <div class="history-img-warp">
+                        <div class="history-img-1"></div>
+                        <div class="history-img-2"></div>
+                        <div class="history-img-3"></div>
+                        <div class="history-img-4"></div>
+                    </div>
+                    <div class="line"></div>
+                    <div class="history-year-wrap">
+                        <div class="history-year">
+                            <div class="year orange">2022</div>
+                            <ul>
+                                <li><div>핀테크 보안 컨설팅 용역 (KISA)</div></li>
+                                <li><div>다수 보안 컨설팅 수행</div></li>
+                                <li><div>온라인 교육 서비스 제작</div></li>
+                            </ul>
+                        </div>
+                        <div class="history-year">
+                            <div class="year range">2021 ~ 2020</div>
+                            <ul>
+                                <li><div>AUSMS 프로토타입 제작</div></li>
+                                <li><div>코드 분석 도구 제작</div></li>
+                                <li><div>자본금 증가</div></li>
+                                <li><div>핀테크 보안 컨설팅 용역 (KISA)</div></li>
+                                <li><div>다수 보안 컨설팅 수행</div></li>
+                            </ul>
+                        </div>
+                        <div class="history-year">
+                            <div class="year range">2019 ~ 2018</div>
+                            <ul>
+                                <li><div>AI 비서로봇 납품 (한전)</div></li>
+                                <li><div>AI 비서 앱 시범 서비스</div></li>
+                                <li><div>NoDi 출시</div></li>
+                                <li><div>보안 컨설팅</div></li>
+                            </ul>
+                        </div>
+                        <div class="history-year">
+                            <div class="year range">2017 ~ 2016</div>
+                            <ul>
+                                <li><div>AI 비서 앱 개발</div></li>
+                                <li><div>DB Shields 개발</div></li>
+                                <li><div>NoDi 개발</div></li>
+                                <li><div>AI 안드로이드 앱 개발</div></li>
+                            </ul>
+                        </div>
+                        <div class="history-year">
+                            <div class="year">2015</div>
+                            <ul>
+                                <li><div>설립</div></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="contact-bg">
+                <div class="contact-wrap">
+                    <div class="contact-box">
+                        <div class="logo"><img src="./resources/img/bottom_logo_white.svg"></div>
+                        <div class="address">
+                            <img src="./resources/img/icon_bottom_location.svg">
+                            <span>서울시 서초구 방배천로 2길 21, 4층 460호</span>
+                        </div>
+                        <div class="email">
+                            <img src="./resources/img/icon_bottom_mail.svg">
+                            <span>support@yiroul.com</span>
+                        </div>
+                    </div>
+                    <div class="contact-map"><img src="./resources/img/img_map_location.svg"></div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="footer_nav clear_obj">
-       <ul>
-           <li data-menuanchor="NoDi_introduction"><a href="#NoDi_introduction">NoDi 소개</a></li>
-           <li class="division">|</li>
-           <li data-menuanchor="NoDi_effect"><a href="#NoDi_effect">NoDi 도입효과</a></li>
-           <li class="division">|</li>
-           <li data-menuanchor="NoDi_point"><a href="#NoDi_point">특장점</a></li>
-           <li class="division">|</li>
-           <li data-menuanchor="Yiroul_introduction"><a href="#Yiroul_introduction">회사소개</a></li>
-           <li class="division">|</li>
-           <li data-menuanchor="ContactUs"><a href="#ContactUs">Contact us</a></li>
-       </ul>
-    </div>
+    <!-- /.contents -->
 </body>
 </html>
